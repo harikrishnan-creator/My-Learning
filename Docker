@@ -1,0 +1,47 @@
+Docker File:
+Docker File is a text file that contains set of instructions used to build a docker image. In that file, need to mention everything whichever needed to run that application like base image, install dependencies, copy files, env variables etc..
+ 
+ 
+ 
+FROM --> It specifies the base image like ubuntu, python, node, java JDK etc..
+E.g. If you're containerizing python application then you can choose python as base image, or else if you're containerizing node JS app then pick node as base image it's depends on you.
+ 
+LABEL --> Adds metadata about the image.
+E.g. If you're maintaining this image/app then add LABEL maintainer="ram @gmail.com"\ version="1.3"\description="This image runs a java web app" etc..
+ 
+WORKDIR --> Sets the working directory inside the container.
+E.g. If you're setting /app as working directory, that is the main folder of our container. In this directory only we need to copy files from local to image and others etc..
+WORKDIR /app
+ 
+COPY --> Used to copy the files from local(Host) Machine to image.
+E.g. COPY requirements.txt /app --> It will copy the requirements file from the local/host machine to /app working directory in image.
+ 
+ADD --> Similar to COPY, but it's used to copy files, directories, remote URLs, zip, tar archive files into Docker Image. In simple words, ADD will mainly to copy zip, tar files into the image.
+E.g. ADD app.tar.gz  /app  --> this will extract the contents of app.tar.gz into /app.
+ 
+       ADD https://abc.com/config.json   /app/config.json --> download from URL
+ 
+RUN --> Used to execute commands during the image build process.
+E.g. If you want to install something while build the image use this.
+RUN pip install -r requirements.txt --> it till install all the dependencies which we have mentioned in requirements.txt file using python pip package manager.
+ 
+ENV --> sets environment variables.
+E.g. ENV APP_ENV=production
+       ENV USER=ubuntu
+ 
+EXPOSE --> used to document in which port container will listen at run time.
+E.g. EXPOSE 3000 (defining the app/container will run on  3000 port)
+ 
+ 
+CMD --> Specifies the default command to run when the container starts. This instruction will run only the containers starts. While building the image it won't run.
+Note: whichever mentioned inside the CMD command can be overridden by arguments passed at runtime(while running the container) .
+CMD ["python", "app.py"]  --> while running the container we can override like docker run --name pythonApp -p 50:3000 application1 python3 app.py (running by using version 3 of python).
+CMD ["node", "app.js"]
+ 
+ENTRYPOINT --> same as CMD, but it shouldn't be overridden. If we specified the command in the image can't be overridden at the runtime(while running the container).
+
+VOLUME --> This instruction is used to create a mount point in the container that can be linked to a directory on the host machine.
+VOLUME ["/path/in/container"]
+VOLUME ["/app/logs"] --> created logs directory as volume, we can link this volume to host directory while running the container with option v.
+docker run --name cont1 -v home/usr/logs:/app/logs img1 --> app/logs are linked with home/usr/logs. 
+ 
