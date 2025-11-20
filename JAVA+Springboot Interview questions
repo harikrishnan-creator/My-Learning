@@ -1,0 +1,49 @@
+Critical Java + Springboot interview questions
+
+Java Backend Developer (3+ Yrs): Interview Questions Asked @ Tech Mahindra Core Java (OOPs, Collections, Java 8)
+
+
+1.How do equals 0 and hashCode( work together in Java Collections?
+2.Explain internal working of HashMap. 3.Difference between List, Set, and Map. 
+4.Explain map( vs flatMap( in Stream API. 
+5.How to find duplicate elements in a List using Java 8 (only print, no collect)? 
+6.What is Optional and where do we use it? 7.What is a Functional Interface & Lambda Expression?
+Spring & Spring Boot
+8.What is a Bean in Spring? How does Spring create and manage beans internally? 
+9.Difference between @Component, @Service, @Repository, and @Controller. 
+10.What happens internally when a Spring Boot application starts?
+11.How does Dependency Injection work in Spring? 
+12.How do you implement global exception handling in Spring Boot?
+13.How does Spring Boot auto-configuration work? 
+14.What are different Bean Scopes in Spring?
+
+REST APIs & Web Layer
+
+15.Difference between PUT, POST, PATCH. 
+16.What is Idempotency in REST APIs? 
+17.Difference between @RequestBody, @RequestParam, and @PathVariable. 
+18.How do you design versioned APIs?
+
+Microservices Distributed Systems
+
+19.What is Circuit Breaker? Explain with Resilience4j. 
+20.What is AP| Gateway and why do we need it? 21.How do microservices communicate with each other?
+22.Difference between synchronous & asynchronous communication.
+23.How do you implement centralized logging in nicroservices?
+24.What is service discovery?
+25.How do you secure microservices (JWT/OAuth2)?
+
+SQL & Database Knowledge
+
+26.Write an SQL query to fetch highest salary. 
+27.Difference between INNER JOIN, LEFT JOIN, RIGHT JOIN.
+28.What is indexing? How does it improve performance?
+29.Difference between Primary Key and Unique Key. 
+30.How do you optimize slow SQL queries?
+
+Coding / Problem-Solving
+31.Maximum sum subarray (Kadane's Algorithm). 
+32.Two-sum problem.
+33.Find missing number in an array. 
+34.Find duplicate elements with count (Java 8). 
+35.Print longest palindrome substring.
