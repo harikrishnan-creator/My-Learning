@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  # Spring Boot Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: demo-liquibase-app
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/liquibase_db
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root_password
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      SPRING_JPA_SHOW_SQL: false
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - liquibase-network
+    restart: unless-stopped
+
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: demo-liquibase-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: liquibase_db
+      MYSQL_USER: liquibase_user
+      MYSQL_PASSWORD: liquibase_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - liquibase-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 10s
+      retries: 5
+      interval: 10s
+    restart: unless-stopped
+
+  # phpMyAdmin (optional - for database management UI)
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: demo-liquibase-phpmyadmin
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: root
+      PMA_PASSWORD: root_password
+      PMA_PORT: 3306
+    ports:
+      - "8081:80"
+    depends_on:
+      - mysql
+    networks:
+      - liquibase-network
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  liquibase-network:
+    driver: bridge

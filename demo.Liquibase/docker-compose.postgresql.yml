@@ -1,0 +1,67 @@
+# Production-like environment with PostgreSQL
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: demo-liquibase-app-postgres
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/liquibase_db
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      SPRING_DATASOURCE_USERNAME: liquibase_user
+      SPRING_DATASOURCE_PASSWORD: liquibase_password
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.PostgreSQL10Dialect
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - liquibase-network-postgres
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: demo-liquibase-postgres
+    environment:
+      POSTGRES_ROOT_PASSWORD: root_password
+      POSTGRES_DB: liquibase_db
+      POSTGRES_USER: liquibase_user
+      POSTGRES_PASSWORD: liquibase_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - liquibase-network-postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U liquibase_user"]
+      timeout: 10s
+      retries: 5
+      interval: 10s
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: demo-liquibase-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin_password
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - liquibase-network-postgres
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  liquibase-network-postgres:
+    driver: bridge

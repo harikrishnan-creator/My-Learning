@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <!-- Changelog: Create Products Table -->
+    <!-- This is a sample template showing how to create additional tables -->
+    <!-- To use this file, uncomment the include statement in db.changelog-master.xml -->
+    
+    <changeSet id="002-create-products-table" author="developer">
+        <description>Create products table</description>
+        
+        <createTable tableName="products">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="TEXT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="price" type="DECIMAL(10, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="stock_quantity" type="INT">
+                <constraints nullable="false" check="stock_quantity >= 0"/>
+            </column>
+            <column name="category" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        
+        <!-- Create index for faster queries -->
+        <createIndex indexName="idx_products_category" tableName="products">
+            <column name="category"/>
+        </createIndex>
+        
+    </changeSet>
+
+</databaseChangeLog>
