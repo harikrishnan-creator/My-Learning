@@ -1,0 +1,30 @@
+🛠 Workflow Stages
+1. 	Checkout & Setup Java
+• 	Pull your repo and set up JDK.
+• 	Build your Java app with Maven/Gradle.
+2. 	Inject Metadata
+• 	Add labels/annotations or environment variables.
+• 	Use GitHub Actions  or  for metadata injection.
+3. 	Download & Extract Package
+• 	Download dependencies or artifacts.
+• 	Extract and prepare them for deployment.
+4. 	Handle Secrets (SPI, SMTP, etc.)
+• 	Store sensitive values in GitHub Secrets.
+• 	Pass them into Kubernetes  manifests.
+5. 	Promote Application Image
+• 	Build Docker image.
+• 	Push to container registry (e.g., GitHub Container Registry or Docker Hub).
+6. 	Setup kubectl
+• 	Configure  with cluster credentials (often via GitHub Secrets).
+• 	Install  and / if needed.
+7. 	Delete StatefulSet (if required)
+• 	Run  as part of cleanup.
+8. 	Deploy to Kubernetes
+• 	Apply manifests ().
+• 	Or use Helm for templated deployments.
+9. 	Post-Deployment Tasks
+• 	Run smoke tests.
+• 	Verify pods/services are healthy.
+10. 	Complete Job
+• 	Mark workflow success.
+• 	Notify via Slack/email.
