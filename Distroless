@@ -1,0 +1,15 @@
+FROM node:24-alpine AS build
+WORKDIR /app
+COPY package*.json ./
+RUN npm install --only=production
+RUN mkdir -p /app/logs
+
+FROM gcr.io/distroless/nodejs24-debian13
+WORKDIR /app
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build --chown=65532:65532 /app/logs /app/logs
+COPY server.js ./
+COPY package.json ./
+EXPOSE 8081
+USER 65532
+CMD ["server.js", "development"]
