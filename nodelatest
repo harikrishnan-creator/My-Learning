@@ -1,6 +1,12 @@
 FROM node:24-alpine
 WORKDIR /app
+
+# Copy dependency files first
 COPY package*.json ./
 RUN npm install
+
+# Copy source code
 COPY . .
-CMD [node, app.js]
+
+EXPOSE 3000
+CMD ["npm", "start"]
