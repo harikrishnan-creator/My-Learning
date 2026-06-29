@@ -1,7 +1,10 @@
 name: Pull from DockerHub and Push to ECR
 
 on:
-  workflow_dispatch:   # run manually, or change to push/PR if needed
+  workflow_dispatch:
+  push:
+   branches:
+      - main       # run manually, or change to push/PR if needed
 
 jobs:
   dockerhub-to-ecr:
@@ -35,18 +38,18 @@ jobs:
       # 5. Pull image from Docker Hub
       - name: Pull image from Docker Hub
         run: |
-          docker pull ${{ vars.DOCKER_USERNAME }}/dokop:latest
+          docker pull ${{ vars.DOCKER_USERNAME }}/dokop:v1
 
       # 6. Tag image for ECR
       - name: Tag image for ECR
         run: |
           ECR_REGISTRY=${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY=myapp   # replace with your ECR repo name
-          docker tag ${{ vars.DOCKER_USERNAME }}/dokop:latest $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          docker tag ${{ vars.DOCKER_USERNAME }}/dokop:v1 $ECR_REGISTRY/$ECR_REPOSITORY:v1
 
       # 7. Push image to ECR
       - name: Push image to ECR
         run: |
           ECR_REGISTRY=${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY=myapp
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:v1
