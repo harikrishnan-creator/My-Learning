@@ -16,8 +16,7 @@ permissions:
 jobs:
   deploy:
     name: Deploy
-    runs-on: [self-hosted,Linux] 
-    environment: production
+    runs-on: [self-hosted] 
 
     steps:
     - name: Checkout
