@@ -44,12 +44,12 @@ jobs:
       - name: Tag image for ECR
         run: |
           ECR_REGISTRY=${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY=my-devops-repo   # replace with your ECR repo name
+          ECR_REPOSITORY=harikrishnan/newrepo   # replace with your ECR repo name
           docker tag ${{ vars.DOCKER_USERNAME }}/dokop:v1 $ECR_REGISTRY/$ECR_REPOSITORY:v1
 
       # 7. Push image to ECR
       - name: Push image to ECR
         run: |
           ECR_REGISTRY=${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY=my-devops-repo
+          ECR_REPOSITORY=harikrishnan/newrepo
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:v1
