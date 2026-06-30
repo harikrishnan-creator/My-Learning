@@ -1,0 +1,67 @@
+name: Push to ECR wit commit image
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main   # run manually, or change to push/PR if needed
+
+jobs:
+  dockerhub-to-ecr:
+    runs-on: self-hosted
+
+    steps:
+      # 1. Checkout repo (needed to get commit SHA)
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 2. Log in to Docker Hub
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ vars.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # 3. Configure AWS credentials
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-2   # change to your AWS region
+
+      # 4. Log in to Amazon ECR
+      - name: Log in to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      # 5. Pull image from Docker Hub
+      - name: Pull image from Docker Hub
+        run: |
+          docker pull ${{ vars.DOCKER_USERNAME }}/distroimage1:v1
+
+      # 6. Tag image for ECR with commit SHA
+      - name: Tag image for ECR
+        run: |
+          COMMIT_ID=$(git rev-parse --short HEAD)
+          ECR_REGISTRY=${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY=harikrishnan/my-devops-repo   # replace with your ECR repo name
+
+          echo "Tagging image with commit ID: $COMMIT_ID"
+
+          docker tag ${{ vars.DOCKER_USERNAME }}/distroimage1:v1 \
+            $ECR_REGISTRY/$ECR_REPOSITORY:$COMMIT_ID
+
+          # Optional: also tag as 'latest' for convenience
+          docker tag ${{ vars.DOCKER_USERNAME }}/distroimage1:v1 \
+            $ECR_REGISTRY/$ECR_REPOSITORY:latest
+
+      # 7. Push image to ECR
+      - name: Push image to ECR
+        run: |
+          COMMIT_ID=$(git rev-parse --short HEAD)
+          ECR_REGISTRY=${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY=harikrishnan/my-devops-repo
+
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$COMMIT_ID
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
