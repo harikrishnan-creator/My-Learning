@@ -38,7 +38,7 @@ jobs:
       # 5. Pull image from Docker Hub
       - name: Pull image from Docker Hub
         run: |
-          docker pull ${{ vars.DOCKER_USERNAME }}/dokop:v1
+          docker pull ${{ vars.DOCKER_USERNAME }}/distroimage1:v1
 
       # 6. Tag image for ECR
       - name: Tag image for ECR
